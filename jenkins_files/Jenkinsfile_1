@@ -6,22 +6,21 @@ pipeline {
         stage ('Build') {
             steps {
                 echo '----------------------Building...-----------------------'
-                docker build -t mycatapp:1.0 Flask_Docker/.
-                docker run -p 7577:5000 --name cat_container mycatapp:1.0
+                ip a
+                sleep 3
                 
             }
         }
         stage ('Test') {
             steps {
                 echo '---------------------Testing...---------------------'
-                curl https:/192.168.0.110:7577
+                sh 'bash docker_clean.sh'
             }
         }
         stage ('Deleting images/containers...') {
             steps {
                 echo 'Deleting...'
-                docker kill $(docker ps -q)
-                docker image prune -a
+
             }
         }
     }
