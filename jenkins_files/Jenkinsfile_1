@@ -6,8 +6,7 @@ pipeline {
         stage ('Build') {
             steps {
                 echo '----------------------Building...-----------------------'
-                ip a
-                sleep 3
+                
                 
             }
         }
