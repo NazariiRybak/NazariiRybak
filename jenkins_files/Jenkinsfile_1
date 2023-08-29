@@ -14,7 +14,6 @@ pipeline {
         stage ('Build') {
             steps {
                 echo '---------------------Building docker image and starting container...---------------------'
-                sh 'bash docker_clean.sh'
                 sh 'docker build -t catapp:1 Flask_Docker/.'
                 sh 'docker run -p 7577:5000 --name container_with_cat catapp:1'
             }
