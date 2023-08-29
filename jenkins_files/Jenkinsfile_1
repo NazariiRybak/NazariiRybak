@@ -30,8 +30,7 @@ pipeline {
         stage ('Cleaning...') {
             steps {
                 echo 'Deleting images and containers...'
-                docker kill $(docker ps -q)
-                docker rmi $(docker image -q)
+                sh 'bash docker_clean.sh'
                 echo "Done"
             }
         }
