@@ -3,26 +3,37 @@ pipeline {
     agent any
 
     stages {
-        stage ('Build') {
+        stage ('Trigger') {
             steps {
-                echo '----------------------Building...-----------------------'
-                sh 'bash docker_clean.sh'
-                sh 'docker build -t catapp:1 Flask_Docker/.'
-                sh 'docker run -p 7577:5000 --name container_with_cat catapp:1'
+                echo '----------------------Trigger remote job...-----------------------'
+                sh 'curl -X POST http://192.168.0.110:8080/job/DLC_to_pipeline_job_1/build --user user_demo:119c37e1b45464d280568e44d300a4dbd9'
+                
                 
             }
         }
-        stage ('Test') {
+        stage ('Build') {
             steps {
-                echo '---------------------Testing...---------------------'
-                sh 'curl http:/192.168.0.110:7577'
-                sh 'sleep 20'
+                echo '---------------------Building docker image and starting container...---------------------'
+                sh 'bash docker_clean.sh'
+                sh 'docker build -t catapp:1 Flask_Docker/.'
+                sh 'docker run -p 7577:5000 --name container_with_cat catapp:1'
             }
         }
-        stage ('Deleting images/containers...') {
+        stage ('Checking'){
+            steps{
+                echo "We see that our app working correctly"
+                sleep 3
+                echo "Now, lets remove our image with container"
+                sleep 3
+
+            }
+        }
+        stage ('Cleaning...') {
             steps {
-                echo 'Deleting...'
-                sh 'bash docker_clean.sh'
+                echo 'Deleting images and containers...'
+                docker kill $(docker ps -q)
+                docker rmi $(docker image -q)
+                echo "Done"
             }
         }
     }
